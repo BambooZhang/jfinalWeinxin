@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Carousel Template &middot; Bootstrap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- Le styles -->
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<style>
+
+
+
+</style>
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+
+<!-- Fav and touch icons -->
+<script src="js/jquery-2.0.2.min.js"></script>
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+<link rel="shortcut icon" href="ico/favicon.png">
+</head>
+<script type="text/javascript">
+    var ws = null;
+$(document).ready(function(){
+	startServer();
+});
+function startServer() {
+    var url = "ws://127.0.0.1:8080/hancity/websocket";
+    if ('WebSocket' in window) {
+        ws = new WebSocket(url);
+    } else if ('MozWebSocket' in window) {
+        ws = new MozWebSocket(url);
+    } else {
+        alert('Your browser Unsupported WebSocket!');
+        return;
+    }
+
+    ws.onopen = function() {
+        document.getElementById("messageContent").innerHTML += 'websocket open! Welcome!<br />';
+    };
+    ws.onmessage = function(event) {
+    	var str=event.data;//.parseJSON();
+    	var mgObj=$.parseJSON(str);
+        document.getElementById("messageContent").innerHTML += mgObj.nickName + mgObj.time +'<br />';
+        document.getElementById("messageContent").innerHTML +="<div class='alert'>"+mgObj.message +"</div>";
+        var div = document.getElementById('scrolldIV');
+        $("#messageContent").scrollTop($("#messageContent").scrollTop()+50);
+    };
+    ws.onclose = function() {
+        document.getElementById("messageContent").innerHTML += 'websocket closed! Byebye!<br />';
+    };
+}
+
+    function sendMyMessage() {
+        var nickName = document.getElementById('nickName');
+        var textMessage = document.getElementById('textMessage');
+        if (ws != null && textMessage.value != '') {
+            ws.send(nickName.value + ":" + textMessage.value);
+            textMessage.value = '';
+        }
+    }
+</script>
+<body>
+
+
+
+<!-- NAVBAR
+================================================== -->
+	<div class="navbar-wrapper">
+		<!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
+		<div class="container">
+
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner-my bg-color">
+					<!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
+					<button type="button" class="btn btn-navbar" data-toggle="collapse"
+						data-target=".nav-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="brand" href="#">汉城</a>
+					<!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<li><a href="#">Home</a></li>
+							<li><a href="#about">About</a></li>
+							<li class="active"><a href="chart.html">Contact</a></li>
+							<!-- Read about Bootstrap dropdowns at http://twbs.github.com/bootstrap/javascript.html#dropdowns -->
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+								data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Action</a></li>
+									<li><a href="#">Another action</a></li>
+									<li><a href="#">Something else here</a></li>
+									<li class="divider"></li>
+									<li class="nav-header">Nav header</li>
+									<li><a href="#">Separated link</a></li>
+									<li><a href="#">One more separated link</a></li>
+								</ul></li>
+						</ul>
+					</div>
+					<!--/.nav-collapse -->
+				</div>
+				<!-- /.navbar-inner -->
+			</div>
+			<!-- /.navbar -->
+
+		</div>
+		<!-- /.container -->
+	</div><!-- /.navbar-wrapper -->
+
+
+
+
+
+
+<!-- Marketing messaging and featurettes
+================================================== -->
+<!-- Wrap the rest of the page in another container to center all the content. -->
+
+<div class="container marketing">
+
+  
+
+
+ 
+
+  <div class="featurette">
+    <div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list"> 
+          <li class="nav-header">Sidebar</li>
+          <li class="active"><a href="#"><i class="icon-chevron-right"></i> Link</a></li>
+          <li><a href="#">Link1</a></li>
+          <li><a href="#">Link2</a></li>
+          <li><a href="#">Link3</a></li>
+          <li class="nav-header">Sidebar</li>
+          <li><a href="#">Link1</a></li>
+          <li><a href="#">Link2</a></li>
+        </ul>
+      </div><!--/.well -->
+    </div><!--/span-->
+    <div class="span9">
+    		<div class="hero-unit" id="messageContent" style="height:100px;overflow: scroll;"></div>
+    
+	 		<div class="hero-unit">
+		      	  昵称:<input type="text" id="nickName" size="20" />
+				 <br />
+				         消息:<textarea  type="text"  id="textMessage"  class="span6 input-block-level" ></textarea >
+				   </br>
+				 <input type="button"  class="btn btn-primary btn-min" onclick="sendMyMessage()" value="Send">
+				 
+	        
+			</div>
+     
+      
+    </div><!--/span-->
+  </div><!--/row-->
+  </div>
+
+
+  <!-- /END THE FEATURETTES -->
+
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p>&copy; 2015 zjcjava@163.com </p>
+
+   
+
+  </footer>
+
+</div><!-- /.container -->
+
+
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="js/bootstrap.min.js"></script>
+<script>
+  !function ($) {
+    $(function(){
+      // carousel demo
+      $('#myCarousel').carousel()
+    })
+  }(window.jQuery)
+</script>
+<script src="js/holder/holder.js"></script>
+  </body>
+</html>
